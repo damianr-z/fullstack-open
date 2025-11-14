@@ -1,7 +1,7 @@
 import axios from 'axios';
-const baseUrl = '/api/notes';
+const baseUrl = '/api/blogs';
 
-let token = null;
+let token;
 
 const setToken = (newToken) => {
   token = `Bearer ${newToken}`;
@@ -16,20 +16,9 @@ const create = async (newObject) => {
   const config = {
     headers: { Authorization: token },
   };
+
   const response = await axios.post(baseUrl, newObject, config);
   return response.data;
 };
 
-const update = (id, newObject) => {
-  const request = axios.put(`${baseUrl}/${id}`, newObject);
-  return request.then((response) => response.data);
-};
-
-const notesService = {
-  getAll,
-  create,
-  update,
-  setToken,
-};
-
-export default notesService;
+export default { getAll, create, setToken };

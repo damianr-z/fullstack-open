@@ -51,7 +51,7 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
     likes: body.likes || 0,
   });
 
-  if (!body.user || !body.url) {
+  if (!body.title || !body.url) {
     return response.status(400).send({ error: 'missing data' });
   }
 
