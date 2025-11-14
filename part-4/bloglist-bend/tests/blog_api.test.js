@@ -2,6 +2,7 @@ const { test, after, beforeEach, describe } = require('node:test');
 const assert = require('node:assert');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
+const bcrypt = require('bcryptjs');
 const app = require('../app');
 const api = supertest(app);
 const User = require('../models/user');
@@ -14,9 +15,29 @@ beforeEach(async () => {
   try {
     await User.deleteMany({});
     await Blog.deleteMany({});
-    const blogObject = helper.initialBlogs.map((blog) => new Blog(blog));
-    const blogArray = blogObject.map((blog) => blog.save());
-    await Promise.all(blogArray);
+
+    // Create a test user first with proper password hash
+    const passwordHash = await bcrypt.hash('testPassword', 10);
+    const testUser = new User({
+      username: 'testUser',
+      name: 'John Testing',
+      passwordHash: passwordHash,
+    });
+    const savedUser = await testUser.save();
+
+    // Create blogs with user reference
+    const blogsWithUser = helper.initialBlogs.map((blog) => ({
+      ...blog,
+      user: savedUser._id,
+    }));
+
+    const blogObjects = blogsWithUser.map((blog) => new Blog(blog));
+    const blogPromises = blogObjects.map((blog) => blog.save());
+    const savedBlogs = await Promise.all(blogPromises);
+
+    // Update user's blogs array
+    savedUser.blogs = savedBlogs.map((blog) => blog._id);
+    await savedUser.save();
   } catch (error) {
     console.log('this is the error ', error);
   }
@@ -64,18 +85,16 @@ describe('Addition of new blogs', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
-    const response = await api.get('/api/blogs');
     const blogsAtEnd = await helper.blogsInDb();
-    assert.strictEqual(blogsAtEnd, helper.initialBlogs.length + 1);
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
   });
 
   // 4.23
-  test('a fails with status code 401 when token is not provided', async () => {
+  test('fails with status code 401 when token is not provided', async () => {
     const newBlog = {
       url: 'howtoberich',
       title: 'How to be rich',
       author: 'A rich Author',
-      user: '6651e2ff3abdf7806515fe83',
       likes: 9,
     };
 
@@ -85,9 +104,8 @@ describe('Addition of new blogs', () => {
       .expect(401)
       .expect('Content-Type', /application\/json/);
 
-    const response = await api.get('/api/blogs');
     const blogsAtEnd = await helper.blogsInDb();
-    assert.strictEqual(blogsAtEnd, helper.initialBlogs.length);
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length);
   });
 
   test('creating a blog with no likes shows 0 likes', async () => {
@@ -97,25 +115,18 @@ describe('Addition of new blogs', () => {
       url: 'unpopularblog',
     };
 
-    if (!unpopularBlog.likes) {
-      unpopularBlog.likes = 0;
-    }
-
-    await api
+    const response = await api
       .post('/api/blogs')
       .set('Authorization', `Bearer ${token}`)
       .send(unpopularBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
-    const response = await api.get('/api/blogs');
-    response.body.forEach((blog) => {
-      assert(blog.likes === 0);
-    });
+    assert.strictEqual(response.body.likes, 0);
   });
 
   test('a blog with missing data is not added', async () => {
-    const blogsAtStart = await api.get('/api/blogs');
+    const blogsAtStart = await helper.blogsInDb();
     const incompleteBlog = {
       title: 'An incomplete blog',
     };
@@ -127,7 +138,6 @@ describe('Addition of new blogs', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    const response = await api.get('/api/blogs');
     const blogsAtEnd = await helper.blogsInDb();
     assert.strictEqual(blogsAtEnd.length, blogsAtStart.length);
   });
@@ -174,11 +184,10 @@ describe('Deletion of a blog', () => {
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
       .set('Authorization', `Bearer ${token}`)
-      .expect(204)
-      .expect('Content-Type', /application\/json/);
+      .expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
-    assert(blogsAtEnd, blogsAtStart - 1);
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1);
   });
 });
 

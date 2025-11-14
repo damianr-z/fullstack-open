@@ -7,15 +7,12 @@ const User = require('../models/user');
 const testUserToken = async () => {
   const testUser = {
     username: 'testUser',
-    name: 'John Testing',
     password: 'testPassword',
   };
 
-  await api.post('/api/users').send(testUser);
   const loginDetails = await api.post('/api/login').send(testUser);
   return loginDetails.body.token;
 };
-
 
 const initialBlogs = [
   {
@@ -23,14 +20,25 @@ const initialBlogs = [
     title: 'Eat Smarter',
     author: 'Shawn Stevenson',
     likes: 10,
-    id: '6653c3f5a51287bb5644ebd6',
   },
   {
     url: 'midudev',
     title: 'Aprendiendo Git y Github',
     author: 'Miguel Angel Duran',
     likes: 9,
-    id: '6653c3f5a51287bb5644ebd7',
+  },
+];
+
+const initialUsers = [
+  {
+    username: 'initialUser1',
+    name: 'Initial User One',
+    passwordHash: '$2b$10$dummyHashForTesting1',
+  },
+  {
+    username: 'initialUser2',
+    name: 'Initial User Two',
+    passwordHash: '$2b$10$dummyHashForTesting2',
   },
 ];
 
@@ -47,6 +55,7 @@ const usersInDb = async () => {
 module.exports = {
   testUserToken,
   initialBlogs,
+  initialUsers,
   blogsInDb,
   usersInDb,
 };
