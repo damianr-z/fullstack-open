@@ -9,14 +9,13 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState(null); 
+  const [successMessage, setSuccessMessage] = useState(null);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
-  
   useEffect(() => {
     const loggedUser = window.localStorage.getItem('loggedUser');
     if (loggedUser) {
@@ -25,13 +24,13 @@ const App = () => {
       blogService.setToken(user.token);
     }
   }, []);
-  
+
   useEffect(() => {
-    blogService.getAll().then(blogs => {
+    blogService.getAll().then((blogs) => {
       console.log('blogsAtStart', blogs.length);
     });
   }, []);
-  
+
   function clearForm() {
     setUsername('');
     setPassword('');
@@ -49,7 +48,7 @@ const App = () => {
       setErrorMessage('wrong credentials');
       setTimeout(() => {
         setErrorMessage(null);
-        clearForm()
+        clearForm();
       }, 5000);
     }
   };
@@ -88,14 +87,15 @@ const App = () => {
 
   const userBlogs = () => (
     <>
-     {successMessage && <div className="success">{successMessage}</div>}
-      <h2>blogs</h2>
+      {successMessage && <div className="success">{successMessage}</div>}
+      {errorMessage && <div className="error">{errorMessage}</div>}
       <div className={'userInfo'}>
         <p>
           {user.name} <em>logged-in</em>
         </p>
         <button onClick={handleLogout}>log out</button>
       </div>
+      <h2>Blogs List</h2>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
@@ -103,7 +103,8 @@ const App = () => {
         blogService={blogService}
         setBlogs={setBlogs}
         blogs={blogs}
-        message={setSuccessMessage}
+        successMessage={setSuccessMessage}
+        errorMessage={setErrorMessage}
         user={user}
       />
     </>
