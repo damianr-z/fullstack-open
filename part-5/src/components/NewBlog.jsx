@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
+import { useAppContext } from '../context/AppContext';
+import blogService from '../services/blogs';
 
-const NewBlog = ({
-  blogService,
-  blogs,
-  setBlogs,
-  user,
-  successMessage,
-  errorMessage,
-}) => {
+const NewBlog = () => {
+  const { blogs, setBlogs, user, showMessage } = useAppContext();
   const [newBlog, setNewBlog] = useState('');
 
   const handleSubmit = (e) => {
@@ -22,18 +18,15 @@ const NewBlog = ({
 
     // Client-side validation
     if (!title) {
-      errorMessage('Please add a title');
-      setTimeout(() => errorMessage(null), 3000);
+      showMessage('Please add a title', 'error', 3000);
       return;
     }
     if (!author) {
-      errorMessage('Please add an author');
-      setTimeout(() => errorMessage(null), 3000);
+      showMessage('Please add an author', 'error', 3000);
       return;
     }
     if (!url) {
-      errorMessage('Please add an URL');
-      setTimeout(() => errorMessage(null), 3000);
+      showMessage('Please add an URL', 'error', 3000);
       return;
     }
 
@@ -51,12 +44,10 @@ const NewBlog = ({
       .create(blogObject)
       .then((returnedBlog) => {
         setBlogs(blogs.concat(returnedBlog));
-        successMessage(
-          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+        showMessage(
+          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+          'success'
         );
-        setTimeout(() => {
-          successMessage(null);
-        }, 5000);
         setNewBlog('');
         // Clear the form
         e.target.reset();
@@ -71,20 +62,19 @@ const NewBlog = ({
           const errorMsg =
             error.response?.data?.error ||
             'Invalid blog data. Please check all fields.';
-          errorMessage(errorMsg);
+          showMessage(errorMsg, 'error');
         } else if (error.response?.status === 401) {
-          errorMessage('Unauthorized. Please log in again.');
+          showMessage('Unauthorized. Please log in again.', 'error');
         } else {
-          errorMessage('Failed to create blog. Please try again.');
+          showMessage('Failed to create blog. Please try again.', 'error');
         }
-        setTimeout(() => errorMessage(null), 5000);
       });
   };
 
   return (
     <div>
       <h2>Create new</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <label htmlFor="title">title:</label>
         <input type="text" id="title" name="title" required />
         <label htmlFor="author">author:</label>
