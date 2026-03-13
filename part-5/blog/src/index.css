@@ -10,6 +10,8 @@
 
 .userInfo {
   display: inline-flex;
+  justify-content: flex-end;
+  width: 100%;
   align-items: baseline;
   gap: 2rem;
   margin-bottom: 2rem;
