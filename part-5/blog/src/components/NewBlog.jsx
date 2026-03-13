@@ -45,8 +45,8 @@ const NewBlog = () => {
       .then((returnedBlog) => {
         setBlogs(blogs.concat(returnedBlog));
         showMessage(
-          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-          'success'
+          `a new blog <i>${returnedBlog.title}</i> by <i>${returnedBlog.author}</i> added`,
+          'success',
         );
         setNewBlog('');
         // Clear the form
@@ -72,7 +72,7 @@ const NewBlog = () => {
   };
 
   return (
-    <div>
+    <>
       <h2>Create new</h2>
       <form onSubmit={handleSubmit} noValidate>
         <label htmlFor="title">title:</label>
@@ -83,7 +83,7 @@ const NewBlog = () => {
         <input type="text" id="url" name="url" required />
         <button type="submit">create</button>
       </form>
-    </div>
+    </>
   );
 };
 

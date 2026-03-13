@@ -5,5 +5,10 @@ export default function Message() {
 
   if (!message) return null;
 
-  return <div className={message.type}>{message.text}</div>;
+  return (
+    <div
+      className={message.type}
+      dangerouslySetInnerHTML={{ __html: message.text }}
+    />
+  );
 }

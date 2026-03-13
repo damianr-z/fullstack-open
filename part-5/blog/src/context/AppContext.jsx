@@ -23,17 +23,20 @@ export const AppProvider = ({ children }) => {
 
   // Check for logged-in user on mount
   useEffect(() => {
-    const loggedUser = window.localStorage.getItem('loggedUser');
-    if (loggedUser) {
-      const user = JSON.parse(loggedUser);
+    const loggedUserJSON = window.localStorage.getItem('loggedUser');
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
       setUser(user);
       blogService.setToken(user.token);
+      blogService.getAll().then(setBlogs);
     }
   }, []);
+
 
   const logout = () => {
     window.localStorage.removeItem('loggedUser');
     setUser(null);
+    setBlogs([]);
     blogService.setToken(null);
   };
 
@@ -52,5 +55,9 @@ export const AppProvider = ({ children }) => {
     logout,
   };
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={value}>
+      <main>{children}</main>
+    </AppContext.Provider>
+  );
 };

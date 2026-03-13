@@ -4,8 +4,10 @@
   box-sizing: border-box;
 }
 
-.app {
-  margin: 10rem;
+main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
 }
 
 .userInfo {

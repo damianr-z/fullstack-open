@@ -1,10 +1,10 @@
 {
   "folders": [
     {
-      "path": "../Documents/webdev/fullstack-open/part-5",
+      "path": "../part-5/blog",
     },
     {
-      "path": "../Documents/webdev/fullstack-open/part-4/bloglist-bend",
+      "path": "../part-4/bloglist-bend",
     },
   ],
   "settings": {

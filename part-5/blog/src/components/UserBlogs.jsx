@@ -21,9 +21,11 @@ export default function UserBlogs() {
         <button onClick={handleLogout}>log out</button>
       </div>
       <h2>Blogs List</h2>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      {blogs
+        .filter((blog) => blog.user?.username === user.username)
+        .map((blog) => (
+          <Blog key={blog.id} blog={blog} />
+        ))}
       <NewBlog />
     </>
   );
