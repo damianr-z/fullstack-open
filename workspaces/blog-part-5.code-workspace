@@ -1,0 +1,32 @@
+{
+  "folders": [
+    {
+      "path": "../Documents/webdev/fullstack-open/part-5",
+    },
+    {
+      "path": "../Documents/webdev/fullstack-open/part-4/bloglist-bend",
+    },
+  ],
+  "settings": {
+    "workbench.colorCustomizations": {
+      "activityBar.activeBackground": "#74aedb",
+      "activityBar.background": "#74aedb",
+      "activityBar.foreground": "#15202b",
+      "activityBar.inactiveForeground": "#15202b99",
+      "activityBarBadge.background": "#cb3489",
+      "activityBarBadge.foreground": "#e7e7e7",
+      "commandCenter.border": "#15202b99",
+      "sash.hoverBorder": "#74aedb",
+      "statusBar.background": "#4b97d1",
+      "statusBar.foreground": "#15202b",
+      "statusBarItem.hoverBackground": "#2f7eba",
+      "statusBarItem.remoteBackground": "#4b97d1",
+      "statusBarItem.remoteForeground": "#15202b",
+      "titleBar.activeBackground": "#4b97d1",
+      "titleBar.activeForeground": "#15202b",
+      "titleBar.inactiveBackground": "#4b97d199",
+      "titleBar.inactiveForeground": "#15202b99"
+    },
+    "peacock.color": "#4b97d1",
+  },
+}

@@ -1,0 +1,32 @@
+{
+  "folders": [
+	{
+		"path": "../part-5/notes"
+	},
+	{
+		"path": "../part-3/notes-backend"
+	}
+],
+  "settings": {
+    "workbench.colorCustomizations": {
+      "activityBar.activeBackground": "#ca3c9d",
+      "activityBar.background": "#ca3c9d",
+      "activityBar.foreground": "#e7e7e7",
+      "activityBar.inactiveForeground": "#e7e7e799",
+      "activityBarBadge.background": "#3a4b14",
+      "activityBarBadge.foreground": "#e7e7e7",
+      "commandCenter.border": "#e7e7e799",
+      "sash.hoverBorder": "#ca3c9d",
+      "statusBar.background": "#a62d80",
+      "statusBar.foreground": "#e7e7e7",
+      "statusBarItem.hoverBackground": "#ca3c9d",
+      "statusBarItem.remoteBackground": "#a62d80",
+      "statusBarItem.remoteForeground": "#e7e7e7",
+      "titleBar.activeBackground": "#a62d80",
+      "titleBar.activeForeground": "#e7e7e7",
+      "titleBar.inactiveBackground": "#a62d8099",
+      "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#A62D80"
+  }
+}
