@@ -13,7 +13,13 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // notes require auth, so only fetch if a user is already in state
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteAppUser');
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      noteService.setToken(user.token);
+      noteService.getAll().then(setNotes);
+    }
   }, []);
 
   const addNote = (event) => {
@@ -53,6 +59,7 @@ const App = () => {
     event.preventDefault();
     try {
       const user = await loginService.login({ username, password });
+      window.localStorage.setItem('loggedNoteAppUser', JSON.stringify(user));
       noteService.setToken(user.token);
       setUser(user);
       setUsername('');
@@ -73,7 +80,9 @@ const App = () => {
   };
 
   const handleLogout = () => {
+    window.localStorage.removeItem('loggedNoteAppUser');
     setUser(null);
+    setNotes([]);
     noteService.setToken(null);
   };
 
@@ -118,9 +127,7 @@ const App = () => {
 
   return (
     <main>
-      <h1>Notes</h1>
-
-      <h2>{user ? 'Notes' : 'Login'}</h2>
+      <h1>{user ? 'Notes' : 'Login'}</h1>
 
       {!user && loginForm()}
       {user && (
