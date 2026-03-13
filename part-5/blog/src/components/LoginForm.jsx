@@ -18,6 +18,7 @@ export default function LoginForm() {
       blogService.setToken(user.token);
       setUser(user);
       clearForm();
+      console.log("logging in with", username, password)
     } catch (exception) {
       showMessage('wrong credentials', 'error');
       clearForm();
@@ -50,7 +51,7 @@ export default function LoginForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button>login</button>
+        <button type="submit">login</button>
       </form>
     </>
   );
