@@ -6,11 +6,11 @@ const NewBlog = () => {
   const blogFormRef = useRef();
 
   return (
-    <>
-      <Toogleable ref={blogFormRef} buttonLabel="new blog">
+    <div className='newBlog'>
+      <Toogleable ref={blogFormRef}>
         <BlogForm blogFormRef={blogFormRef} />
       </Toogleable>
-    </>
+    </div>
   );
 };
 

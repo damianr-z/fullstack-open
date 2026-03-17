@@ -6,8 +6,9 @@ const Togglable = ({ children, buttonLabel, ref }) => {
   const hideWhenVisible = { display: visible ? 'none' : 'block' };
   const showWhenVisible = { display: visible ? 'block' : 'none' };
 
-  const toggleVisibility = () => {
-    setVisible(!visible);
+  const toggleVisibility = (e) => {
+    e.preventDefault();
+    setVisible((prev) => !prev);
   };
 
   useImperativeHandle(ref, () => {

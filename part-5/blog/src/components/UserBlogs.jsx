@@ -21,12 +21,18 @@ export default function UserBlogs() {
         <button onClick={handleLogout}>log out</button>
       </div>
       <h2>Blogs List</h2>
-      {blogs
-        .filter((blog) => blog.user?.username === user.username)
-        .map((blog) => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
-      <NewBlog />
+      <div className="blogContainer">
+        <div className="blogListPanel">
+          <ul className="blogList">
+            {blogs
+              .filter((blog) => blog.user?.username === user.username)
+              .map((blog) => (
+                <Blog key={blog.id} blog={blog} />
+              ))}
+          </ul>
+        </div>
+        <NewBlog />
+      </div>
     </>
   );
 }
