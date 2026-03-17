@@ -33,15 +33,8 @@ export default function BlogForm({ blogFormRef }) {
         likes: 0,
       });
 
-      const normalizedBlog = {
-        ...returnedBlog,
-        user:
-          typeof returnedBlog.user === 'object' && returnedBlog.user !== null
-            ? returnedBlog.user
-            : { username: user.username, name: user.name, id: user.id },
-      };
-
-      setBlogs((prevBlogs) => prevBlogs.concat(normalizedBlog));
+      const updatedBlogList = await blogService.getAll();
+      setBlogs(updatedBlogList);
       showMessage(
         `a new blog <i>${returnedBlog.title}</i> by <i>${returnedBlog.author}</i> added`,
         'success',
