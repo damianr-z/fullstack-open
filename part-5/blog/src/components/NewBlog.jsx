@@ -7,7 +7,7 @@ const NewBlog = () => {
 
   return (
     <>
-      <Toogleable ref={blogFormRef}>
+      <Toogleable ref={blogFormRef} buttonLabel="new blog">
         <BlogForm blogFormRef={blogFormRef} />
       </Toogleable>
     </>
