@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import Note from './components/Note';
+import LoginForm from './components/LoginForm';
 import noteService from './services/notes';
 import loginService from './services/login';
+import Togglable from './components/Toggleable';
+import NoteForm from './components/NoteForm';
 
 const App = () => {
   const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState('');
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [username, setUsername] = useState('');
@@ -18,20 +20,26 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
       noteService.setToken(user.token);
-      noteService.getAll().then(setNotes);
     }
   }, []);
 
-  const addNote = (event) => {
-    event.preventDefault();
-    const noteObject = {
-      content: newNote,
-      important: Math.random() > 0.5,
-    };
+  useEffect(() => {
+    if (!user) {
+      setNotes([]);
+      return;
+    }
 
+    noteService
+      .getAll()
+      .then(setNotes)
+      .catch((e) => {
+        console.error('Failed to fetch notes:', e);
+      });
+  }, [user]);
+
+  const addNote = (noteObject) => {
     noteService.create(noteObject).then((returnedNote) => {
-      setNotes(notes.concat(returnedNote));
-      setNewNote('');
+      setNotes((prevNotes) => prevNotes.concat(returnedNote));
     });
   };
 
@@ -71,13 +79,21 @@ const App = () => {
       }, 5000);
       return;
     }
-    try {
-      const fetchedNotes = await noteService.getAll();
-      setNotes(fetchedNotes);
-    } catch (e) {
-      console.error('Failed to fetch notes after login:', e);
-    }
   };
+
+  const notesToShow = showAll ? notes : notes.filter((note) => note.important);
+
+  const loginForm = () => (
+    <Togglable buttonLabel={'Click to log in'}>
+      <LoginForm
+        username={username}
+        password={password}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleLogin={handleLogin}
+      />
+    </Togglable>
+  );
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedNoteAppUser');
@@ -86,72 +102,38 @@ const App = () => {
     noteService.setToken(null);
   };
 
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value);
-  };
-
-  const notesToShow = showAll ? notes : notes.filter((note) => note.important);
-
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        <label>
-          username
-          <input
-            type="text"
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          password
-          <input
-            type="password"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </label>
-      </div>
-      <button type="submit">login</button>
-    </form>
-  );
-
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input value={newNote} onChange={handleNoteChange} />
-      <button type="submit">save</button>
-    </form>
-  );
-
   return (
     <main>
       <h1>{user ? 'Notes' : 'Login'}</h1>
 
       {!user && loginForm()}
+
       {user && (
         <div>
           <p>
             {user.name} logged in <button onClick={handleLogout}>logout</button>
           </p>
-          {noteForm()}
-          <div>
-            <button onClick={() => setShowAll(!showAll)}>
-              show {showAll ? 'important' : 'all'}
-            </button>
-          </div>
-          <ul>
-            {notesToShow.map((note) => (
-              <Note
-                key={note.id}
-                note={note}
-                toggleImportance={() => toggleImportanceOf(note.id)}
-              />
-            ))}
-          </ul>
+
+          <Togglable buttonLabel={'new note'}>
+            <NoteForm createNote={addNote} />
+          </Togglable>
         </div>
       )}
+
+      <div>
+        <button onClick={() => setShowAll(!showAll)}>
+          show {showAll ? 'important' : 'all'}
+        </button>
+      </div>
+      <ul>
+        {notesToShow.map((note) => (
+          <Note
+            key={note.id}
+            note={note}
+            toggleImportance={() => toggleImportanceOf(note.id)}
+          />
+        ))}
+      </ul>
     </main>
   );
 };
