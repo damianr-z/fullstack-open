@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Note from './components/Note';
 import LoginForm from './components/LoginForm';
 import noteService from './services/notes';
@@ -14,6 +14,8 @@ const App = () => {
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
 
+  const noteFormRef = useRef();
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteAppUser');
     if (loggedUserJSON) {
@@ -24,11 +26,6 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (!user) {
-      setNotes([]);
-      return;
-    }
-
     noteService
       .getAll()
       .then(setNotes)
@@ -38,6 +35,7 @@ const App = () => {
   }, [user]);
 
   const addNote = (noteObject) => {
+    noteFormRef.current.toggleVisibility();
     noteService.create(noteObject).then((returnedNote) => {
       setNotes((prevNotes) => prevNotes.concat(returnedNote));
     });
@@ -114,26 +112,26 @@ const App = () => {
             {user.name} logged in <button onClick={handleLogout}>logout</button>
           </p>
 
-          <Togglable buttonLabel={'new note'}>
+          <Togglable buttonLabel={'new note'} ref={noteFormRef}>
             <NoteForm createNote={addNote} />
           </Togglable>
+
+          <div>
+            <button onClick={() => setShowAll(!showAll)}>
+              show {showAll ? 'important' : 'all'}
+            </button>
+          </div>
+          <ul>
+            {notesToShow.map((note) => (
+              <Note
+                key={note.id}
+                note={note}
+                toggleImportance={() => toggleImportanceOf(note.id)}
+              />
+            ))}
+          </ul>
         </div>
       )}
-
-      <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? 'important' : 'all'}
-        </button>
-      </div>
-      <ul>
-        {notesToShow.map((note) => (
-          <Note
-            key={note.id}
-            note={note}
-            toggleImportance={() => toggleImportanceOf(note.id)}
-          />
-        ))}
-      </ul>
     </main>
   );
 };
