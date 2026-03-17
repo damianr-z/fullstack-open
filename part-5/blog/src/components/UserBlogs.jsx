@@ -4,7 +4,7 @@ import Blog from './Blog';
 import Message from './Message';
 
 export default function UserBlogs() {
-  const { user, blogs, logout } = useAppContext();
+  const { user, blogs, setBlogs, logout, handleLikeOf } = useAppContext();
 
   const handleLogout = async (event) => {
     event.preventDefault();
@@ -27,7 +27,7 @@ export default function UserBlogs() {
             {blogs
               .filter((blog) => blog.user?.username === user.username)
               .map((blog) => (
-                <Blog key={blog.id} blog={blog} />
+                <Blog key={blog.id} blog={blog} handleLike={() => handleLikeOf(blog.id)} />
               ))}
           </ul>
         </div>

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
-function Blog({ blog }) {
+function Blog({ blog, handleLike }) {
   const [collapsed, setCollapsed] = useState(true);
 
-  const handleShowDetails = () => {
+  const handleShowDetails = (e) => {
+    e.preventDefault();
     setCollapsed((prev) => !prev);
   };
 
@@ -14,8 +15,11 @@ function Blog({ blog }) {
         {!collapsed && (
           <ul>
             <li>Author: {blog.author}</li>
-            <li>Website: {blog.url}</li>
-            <li>Likes: {blog.likes}</li>
+            <li>
+              <li>Website: {blog.url}</li>
+              Likes: {blog.likes}
+              <button onClick={handleLike}>like</button>
+            </li>
           </ul>
         )}
       </span>
