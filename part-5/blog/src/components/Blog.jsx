@@ -9,22 +9,21 @@ function Blog({ blog, handleLike }) {
   };
 
   return (
-    <li className="blog">
+    <div className="blog">
       <span>
         <h4>{blog.title}</h4>
         {!collapsed && (
           <ul>
             <li>Author: {blog.author}</li>
+            <li>Website: {blog.url}</li>
             <li>
-              <li>Website: {blog.url}</li>
-              Likes: {blog.likes}
-              <button onClick={handleLike}>like</button>
+              <button onClick={handleLike}>Like: {blog.likes}</button>
             </li>
           </ul>
         )}
       </span>
       <button onClick={handleShowDetails}>{collapsed ? 'more' : 'hide'}</button>
-    </li>
+    </div>
   );
 }
 

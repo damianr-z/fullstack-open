@@ -68,8 +68,6 @@ export const AppProvider = ({ children }) => {
     };
   }, []);
 
-  const blogFormRef = useRef();
-
   const logout = () => {
     window.localStorage.removeItem('loggedUser');
     setUser(null);
@@ -89,49 +87,56 @@ export const AppProvider = ({ children }) => {
     }, duration);
   };
 
-  //Handling Like update
 
+  ////////////////////// Exercise 5.8 -- Functionality for like button. 
+  // Like update flow:
+  // 1) Validate the clicked id.
+  // 2) Find the blog in local state.
+  // 3) Build a new object with likes + 1 (no mutation).
+  // 4) Send update request to backend.
+  // 5) On success, replace only the matching blog in state.
+  // 6) On 404, remove missing blog from state.
+  // 7) On other errors, keep state unchanged and show a message.
   const handleLikeOf = (id) => {
+    // Guard clause: if click did not provide an id, stop early.
     if (!id) return;
+
+    // Find the target blog from current state.
     const target = blogs.find((n) => n.id === id);
     if (!target) {
-      showMessage('Blog not found', 'error');
+      showMessage(
+        'The targeted blog has not been found of it is deleted ',
+        'error',
+      );
       return;
     }
 
-    const updatedBlog = { ...target, likes: target.likes + 1 };
+    // Create payload immutably so React state is not mutated directly.
+    const likedBlog = { ...target, likes: target.likes + 1 };
+
     blogService
-      .update(id, updatedBlog)
+      .update(id, likedBlog)
+      // Success path: update only the clicked blog, keep others unchanged.
       .then((returnedBlog) => {
         setBlogs((prevBlogs) =>
           prevBlogs.map((blog) => (blog.id !== id ? blog : returnedBlog)),
         );
       })
-      .catch(() => {
-        showMessage(`Blog '${id}' was already removed from server`, 'error');
-        setBlogs((prevBlogs) => prevBlogs.filter((n) => n.id !== id));
+      // Error path: branch by HTTP status.
+      .catch((error) => {
+        // 404 means blog no longer exists on server -> remove locally too.
+        if (error.response?.status === 404) {
+          showMessage(
+            `Blog with id ${id} was already removed from server`,
+            'error',
+          );
+          setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id));
+        } else {
+          // Other errors (network/500/etc): keep state and notify user.
+          showMessage('Failed to update likes. Try again.');
+        }
       });
   };
-
-  //   const toggleImportanceOf = (id) => {
-  //   const note = notes.find((n) => n.id === id);
-  //   const changedNote = { ...note, important: !note.important };
-
-  //   noteService
-  //     .update(id, changedNote)
-  //     .then((returnedNote) => {
-  //       setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)));
-  //     })
-  //     .catch(() => {
-  //       setErrorMessage(
-  //         `Note '${note.content}' was already removed from server`,
-  //       );
-  //       setTimeout(() => {
-  //         setErrorMessage(null);
-  //       }, 5000);
-  //       setNotes(notes.filter((n) => n.id !== id));
-  //     });
-  // };
 
   const value = {
     blogs,
