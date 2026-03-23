@@ -26,8 +26,14 @@ export default function UserBlogs() {
           <ul className="blogList">
             {blogs
               .filter((blog) => blog.user?.username === user.username)
+              //✅ 5.10 completed  
+              .toSorted((a, b) => b.likes - a.likes)
               .map((blog) => (
-                <Blog key={blog.id} blog={blog} handleLike={() => handleLikeOf(blog.id)} />
+                <Blog
+                  key={blog.id}
+                  blog={blog}
+                  handleLike={() => handleLikeOf(blog.id)}
+                />
               ))}
           </ul>
         </div>
