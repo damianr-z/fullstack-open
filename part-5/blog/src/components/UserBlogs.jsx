@@ -4,7 +4,7 @@ import Blog from './Blog';
 import Message from './Message';
 
 export default function UserBlogs() {
-  const { user, blogs, setBlogs, logout, handleLikeOf } = useAppContext();
+  const { user, blogs, logout, handleLikeOf, handleDeleteOf } = useAppContext();
 
   const handleLogout = async (event) => {
     event.preventDefault();
@@ -25,14 +25,18 @@ export default function UserBlogs() {
         <div className="blogListPanel">
           <ul className="blogList">
             {blogs
-              .filter((blog) => blog.user?.username === user.username)
-              //✅ 5.10 completed  
+              // .filter((blog) => blog.user?.username === user.username)
+              //✅ 5.10 completed
               .toSorted((a, b) => b.likes - a.likes)
               .map((blog) => (
                 <Blog
                   key={blog.id}
                   blog={blog}
+                  username={user.username}
                   handleLike={() => handleLikeOf(blog.id)}
+                  handleDelete={() =>
+                    handleDeleteOf({ id: blog.id, username: user.username })
+                  }
                 />
               ))}
           </ul>
