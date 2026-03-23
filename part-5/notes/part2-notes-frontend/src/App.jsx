@@ -70,7 +70,7 @@ const App = () => {
       setUser(user);
       setUsername('');
       setPassword('');
-    } catch (e) {
+    } catch {
       setErrorMessage('Wrong credentials');
       setTimeout(() => {
         setErrorMessage(null);
@@ -103,7 +103,7 @@ const App = () => {
   return (
     <main>
       <h1>{user ? 'Notes' : 'Login'}</h1>
-
+      {errorMessage && <div className="error">{errorMessage}</div>}
       {!user && loginForm()}
 
       {user && (
