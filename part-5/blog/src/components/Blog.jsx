@@ -20,7 +20,7 @@ function Blog({ blog, handleLike, handleDelete, username }) {
               <button onClick={handleLike}>Like: {blog.likes}</button>
             </li>
             <li>
-            {blog.user?.username === username ? (<button onClick={handleDelete}>Delete</button>) : ""}
+              {blog.user?.username === username ? (<button onClick={handleDelete}>Delete</button>) : ''}
             </li>
           </ul>
         )}

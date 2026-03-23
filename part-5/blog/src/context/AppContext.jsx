@@ -1,15 +1,7 @@
-import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { createContext, useState, useEffect, useRef } from 'react';
 import blogService from '../services/blogs';
 
 const AppContext = createContext();
-
-export const useAppContext = () => {
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error('useAppContext must be used within AppProvider');
-  }
-  return context;
-};
 
 export const AppProvider = ({ children }) => {
   const [blogs, setBlogs] = useState([]);
@@ -146,7 +138,7 @@ export const AppProvider = ({ children }) => {
 
     if (!result) {
       (console.log('operation cancelled'),
-        blogService.getAll().then((fetchedBlogs) => console.log(fetchedBlogs)));
+      blogService.getAll().then((fetchedBlogs) => console.log(fetchedBlogs)));
     }
 
     if (result) {
@@ -207,3 +199,5 @@ export const AppProvider = ({ children }) => {
     </AppContext.Provider>
   );
 };
+
+export default AppContext;

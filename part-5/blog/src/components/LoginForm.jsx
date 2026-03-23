@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAppContext } from '../context/AppContext';
+import { useAppContext } from '../context/useAppContext';
 import loginService from '../services/login';
 import blogService from '../services/blogs';
 import Message from './Message';
@@ -18,7 +18,7 @@ export default function LoginForm() {
       blogService.setToken(user.token);
       setUser(user);
       clearForm();
-      console.log("logging in with", username, password)
+      console.log('logging in with', username, password);
     } catch (exception) {
       showMessage('wrong credentials', 'error');
       clearForm();

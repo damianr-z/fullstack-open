@@ -1,4 +1,4 @@
-import { useAppContext } from '../context/AppContext';
+import { useAppContext } from '../context/useAppContext';
 import NewBlog from './NewBlog';
 import Blog from './Blog';
 import Message from './Message';
