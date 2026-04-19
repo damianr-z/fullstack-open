@@ -11,9 +11,12 @@ export default [
     languageOptions: {
       ecmaVersion: 2020,
       // Patch: Remove whitespace from global keys to avoid ESLint flat config errors
-      globals: Object.fromEntries(
-        Object.entries(globals.browser).map(([k, v]) => [k.trim(), v]),
-      ),
+      //   globals: Object.fromEntries(
+      //     Object.entries(globals.browser).map(([k, v]) => [k.trim(), v]),
+      //   ),
+      globals: {
+        ...globals.vitest,
+      },
       parserOptions: {
         ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },

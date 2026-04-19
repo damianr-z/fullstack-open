@@ -1,15 +1,19 @@
 import blogService from '../services/blogs';
 import { useAppContext } from '../context/useAppContext';
 
-export default function BlogForm({ blogFormRef }) {
+export default function BlogForm({ blogFormRef, handleCreateBlog }) {
   const { setBlogs, user, showMessage } = useAppContext();
   const addBlog = async (e) => {
     e.preventDefault();
-    const form = e.target;
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
-    const title = form.title.value.trim();
-    const author = form.author.value.trim();
-    const url = form.url.value.trim();
+    const blogData = {
+      title: formData.get('title')?.toString().trim() ?? '',
+      author: formData.get('author')?.toString().trim() ?? '',
+      url: formData.get('url')?.toString().trim() ?? '',
+    };
+    const { title, author, url } = blogData;
 
     if (!title) {
       showMessage('Please add a title', 'error', 3000);
@@ -22,6 +26,11 @@ export default function BlogForm({ blogFormRef }) {
     if (!url) {
       showMessage('Please add an URL', 'error', 3000);
       return;
+    }
+
+    // Call the handler prop for testing
+    if (typeof handleCreateBlog === 'function') {
+      handleCreateBlog(blogData);
     }
 
     try {

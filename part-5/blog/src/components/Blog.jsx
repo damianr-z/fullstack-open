@@ -11,10 +11,9 @@ function Blog({ blog, handleLike, handleDelete, username }) {
   return (
     <div className="blog">
       <span>
-        <h4>{blog.title}</h4>
+        <h4>{blog.title} by {blog.author}</h4>
         {!collapsed && (
           <ul>
-            <li>Author: {blog.author}</li>
             <li>Website: {blog.url}</li>
             <li>
               <button onClick={handleLike}>Like: {blog.likes}</button>

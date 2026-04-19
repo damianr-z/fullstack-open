@@ -27,7 +27,7 @@
       "titleBar.activeBackground": "#a62d80",
       "titleBar.activeForeground": "#e7e7e7",
       "titleBar.inactiveBackground": "#a62d8099",
-      "titleBar.inactiveForeground": "#e7e7e799",
+      "titleBar.inactiveForeground": "#e7e7e799"
     },
     "peacock.color": "#A62D80",
     "liveServer.settings.multiRootWorkspaceName": "part2-notes-frontend",
