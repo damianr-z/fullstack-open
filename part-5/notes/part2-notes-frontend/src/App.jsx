@@ -26,11 +26,27 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    if (!user) {
+      setNotes([]);
+      return;
+    }
+
     noteService
       .getAll()
       .then(setNotes)
       .catch((e) => {
         console.error('Failed to fetch notes:', e);
+
+        // Stored token can expire or become invalid; clear session on 401.
+        if (e?.response?.status === 401) {
+          window.localStorage.removeItem('loggedNoteAppUser');
+          noteService.setToken(null);
+          setUser(null);
+          setErrorMessage('Your session expired. Please log in again.');
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        }
       });
   }, [user]);
 
@@ -71,7 +87,7 @@ const App = () => {
       setUsername('');
       setPassword('');
     } catch {
-      setErrorMessage('Wrong credentials');
+      setErrorMessage('wrong credentials');
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
@@ -132,6 +148,9 @@ const App = () => {
           </ul>
         </div>
       )}
+      <footer>
+        Note app, Department of Computer Science, University of Helsinki 2025
+      </footer>
     </main>
   );
 };

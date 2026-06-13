@@ -8,6 +8,9 @@
       "name": "notes-backend",
       "path": "../part-3/notes-backend",
     },
+    {
+      "path": "../part-5/notes-e2e-tests",
+    },
   ],
   "settings": {
     "workbench.colorCustomizations": {

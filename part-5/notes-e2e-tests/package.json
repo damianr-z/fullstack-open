@@ -1,0 +1,23 @@
+{
+  "name": "notes-e2e-tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "test": "playwright test --project=chromium --project=firefox",
+  "scripts": {
+    "test": "playwright test",
+    "test:debug": "playwright test --project=chromium --headed --workers=1",
+    "test:report": "playwright show-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.9.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
+  }
+}
