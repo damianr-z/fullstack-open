@@ -1,30 +1,25 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test');
+const { loginWith } = require('./helper');
 
-// 5.17
+// DONE: 5.17
 describe('Blog app', () => {
+
+  let testUser = {
+    name: 'Alexandre',
+    username: 'xerox2',
+    password: 'aventure',
+  };
+
   beforeEach(async ({ page, request }) => {
     await page.addInitScript(() => {
-      window.localStorage.clear();
+      window.sessionStorage.clear();
       window.localStorage.clear();
     });
 
-    const resetResponse = await request.post('/api/testing/reset');
-    if (!resetResponse.ok()) {
-      console.log(
-        'Could not reset database via /api/testing/reset. Continue with isolated test user.',
-      );
-    }
-
-    let testUser = {
-      name: 'Alexandre',
-      username: 'xerox2',
-      password: 'aventure',
-    };
-
-    const createUserResponse = await request.post('/api/users', {
+    await request.post('/api/testing/reset');
+    await request.post('/api/users', {
       data: testUser,
     });
-    expect(createUserResponse.ok()).toBeTruthy();
 
     await page.goto('/');
   });
@@ -35,14 +30,19 @@ describe('Blog app', () => {
     await expect(form.getByRole('button', { name: /login/i })).toBeVisible();
   });
 
-  // 5.18
+  // DONE: 5.18
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      // ...
+      await loginWith(page, testUser.username, testUser.password);
+      await expect(page.locator('body')).toContainText(/logged-in/i);
     });
 
     test('fails with wrong credentials', async ({ page }) => {
-      // ...
+      const errorDiv = page.locator('.error');
+      await loginWith(page, testUser.username, 'a wrong password');
+      await expect(errorDiv).toContainText(/wrong/i);
+      await expect(errorDiv).toHaveCSS('border-style', 'solid');
+      await expect(errorDiv).toHaveCSS('color', 'rgb(215, 34, 2)');
     });
   });
 });
