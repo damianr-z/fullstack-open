@@ -1,9 +1,9 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test');
-const { loginWith } = require('./helper');
+const { loginWith, createBlog } = require('./helper');
+const blog = require('../../../part-4/bloglist-bend/models/blog');
 
 // DONE: 5.17
 describe('Blog app', () => {
-
   let testUser = {
     name: 'Alexandre',
     username: 'xerox2',
@@ -45,15 +45,19 @@ describe('Blog app', () => {
       await expect(errorDiv).toHaveCSS('color', 'rgb(215, 34, 2)');
     });
   });
-});
 
-// 5.19
-describe('When logged in', () => {
-  beforeEach(async ({ page }) => {
-    // ...
-  });
+  // 5.19
+  describe.only('When logged in', () => {
+    beforeEach(async ({ page }) => {
+      await loginWith(page, testUser.username, testUser.password);
+      await expect(page.locator('body')).toContainText(/logged-in/i);
+    });
 
-  test('a new blog can be created', async ({ page }) => {
-    // ...
+    test.only('a new blog can be created', async ({ page }) => {
+      await createBlog(page, 'Test Book', 'Playwright', 'test url');
+      await expect(page.locator('body')).toContainText(
+        /Test Book by Playwright/i,
+      );
+    });
   });
 });
