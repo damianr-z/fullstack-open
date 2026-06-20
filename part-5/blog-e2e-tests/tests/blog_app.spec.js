@@ -46,17 +46,29 @@ describe('Blog app', () => {
     });
   });
 
-  // 5.19
-  describe.only('When logged in', () => {
+  // DONE: 5.19
+  describe('When logged in', () => {
     beforeEach(async ({ page }) => {
       await loginWith(page, testUser.username, testUser.password);
       await expect(page.locator('body')).toContainText(/logged-in/i);
     });
 
-    test.only('a new blog can be created', async ({ page }) => {
+    test('a new blog can be created', async ({ page }) => {
       await createBlog(page, 'Test Book', 'Playwright', 'test url');
       await expect(page.locator('body')).toContainText(
         /Test Book by Playwright/i,
+      );
+    });
+    // DONE: 9.20
+    test.only('a blog can be liked', async ({ page }) => {
+      await createBlog(page, 'Test Book', 'Playwright', 'test url');
+      await page
+        .locator('.blog')
+        .getByRole('button', { name: /^more$/i })
+        .click();
+      await page.locator('.blog button').first().click();
+      await expect(page.locator('.blog button').first()).toContainText(
+        /^Like:\s1$/i,
       );
     });
   });
