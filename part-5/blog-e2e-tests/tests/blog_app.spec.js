@@ -60,7 +60,7 @@ describe('Blog app', () => {
       );
     });
     // DONE: 9.20
-    test.only('a blog can be liked', async ({ page }) => {
+    test('a blog can be liked', async ({ page }) => {
       await createBlog(page, 'Test Book', 'Playwright', 'test url');
       await page
         .locator('.blog')
@@ -70,6 +70,34 @@ describe('Blog app', () => {
       await expect(page.locator('.blog button').first()).toContainText(
         /^Like:\s1$/i,
       );
+    });
+
+    // DONE: 9.21
+    test.only('a blog can be deleted', async ({ page }) => {
+      await createBlog(page, 'Test Book', 'Playwright', 'test url');
+      const targetBlog = page.locator('.blog', {
+        hasText: 'Test Book by Playwright',
+      });
+
+      await targetBlog.getByRole('button', { name: /^more$/i }).click();
+
+      await Promise.all([
+        page.waitForEvent('dialog').then(async (dialog) => {
+          expect(dialog.type()).toBe('confirm');
+          expect(dialog.message()).toMatch(
+            /Are you sure want to delete this blog?/i,
+          );
+          await dialog.accept();
+        }),
+        targetBlog.getByRole('button', { name: /^Delete$/i }).click(),
+      ]);
+
+      await expect(page.locator('body')).toContainText(
+        /Deleting blog Test Book by Playwright/i,
+      );
+
+      await expect(targetBlog).not.toBeVisible();
+      await expect(targetBlog).toHaveCount(0);
     });
   });
 });
