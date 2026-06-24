@@ -17,4 +17,16 @@ const createBlog = async (page, title, author, url) => {
     .waitFor();
 };
 
-export { loginWith, createBlog };
+const clickLikeBtn = async (blog, times) => {
+  await blog.getByRole('button', { name: /^more$/i }).click();
+  const likeBtn = blog.getByRole('button', { name: /Like:/i });
+  for (let i = 0; i < times; i += 1) {
+    await likeBtn.click();
+    await blog
+      .getByRole('button', { name: new RegExp(`^Like:\\s${i + 1}$`, 'i') })
+      .waitFor();
+  }
+  return blog;
+};
+
+export { loginWith, createBlog, clickLikeBtn };

@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test');
-const { loginWith, createBlog } = require('./helper');
+const { loginWith, createBlog, clickLikeBtn } = require('./helper');
 
 // DONE: 5.17
 describe('Blog app', () => {
@@ -111,6 +111,7 @@ describe('Blog app', () => {
     });
   });
 
+  // DONE: 9.22
   describe('When logging a different user', () => {
     beforeEach(async ({ page }) => {
       await loginWith(page, testUser1.username, testUser1.password);
@@ -121,7 +122,6 @@ describe('Blog app', () => {
         .click();
     });
 
-    // DONE: 9.22
     test("a logged-in user cannot delete another user's blog", async ({
       page,
     }) => {
@@ -136,4 +136,61 @@ describe('Blog app', () => {
       ).toHaveCount(0);
     });
   });
+
+  // DONE:  9.23 
+  describe('When a user likes different blogs', () => {
+    beforeEach(async ({ page }) => {
+      await loginWith(page, testUser1.username, testUser1.password);
+      await createBlog(page, 'Test Book 1', 'Martin Fowler', 'test url');
+      await createBlog(page, 'Test Book 2', 'George Orwell', 'test url');
+      await createBlog(page, 'Test Book 3', 'Stephen King', 'test url');
+    });
+
+    test('blogs are listed according to their number of likes', async ({
+      page,
+    }) => {
+      const blogOne = page
+        .locator('.blog')
+        .filter({ hasText: 'Test Book 1 by Martin Fowler' });
+      const blogTwo = page
+        .locator('.blog')
+        .filter({ hasText: 'Test Book 2 by George Orwell' });
+      const blogThree = page.locator('.blog').filter({
+        hasText: 'Test Book 3 by Stephen King',
+      });
+
+      await clickLikeBtn(blogOne, 3);
+      await clickLikeBtn(blogTwo, 1);
+      await clickLikeBtn(blogThree, 4);
+
+      const blogItems = page.locator('.blogList .blog');
+      const blogCount = await blogItems.count();
+      const blogLikes = [];
+
+      for (let i = 0; i < blogCount; i += 1) {
+        const blog = blogItems.nth(i);
+        const likeText = await blog
+          .getByRole('button', { name: /^Like:\s\d+$/i })
+          .textContent();
+        const likeCount = Number(likeText?.match(/\d+/)?.[0] ?? 0);
+        blogLikes.push(likeCount);
+      }
+
+      const sortedLikes = [...blogLikes].sort((a, b) => b - a);
+      
+      expect(blogCount).toBeGreaterThan(0);
+      expect(blogLikes).toEqual(sortedLikes);
+
+      // console.log('blog Likes are:', blogLikes);
+      // console.log('like count array is:', blogLikes);
+      // console.log('sorted likes array is:', sortedLikes);
+    });
+  });
+
+  // Create a beforeEach block to create three different blogs under one user
+  // Write the test block
+  // Ssave each blog in a different variable
+  // Click the thirdBlog 4 times, secondBlog 1 time and the firstBlog 3 times
+  // store likes in an array
+  // loop over array to verify that blog of lower indexes contain more like than those of higher indexes.
 });
