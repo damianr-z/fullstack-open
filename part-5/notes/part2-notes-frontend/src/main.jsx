@@ -1,6 +1,6 @@
-import '@picocss/pico';
 import './styles.css';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 
 const notes = [
@@ -22,5 +22,7 @@ const notes = [
 ];
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <App notes={notes} />
+  <BrowserRouter>
+    <App notes={notes} />
+  </BrowserRouter>,
 );

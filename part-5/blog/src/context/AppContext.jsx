@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import blogService from '../services/blogs';
 
 const AppContext = createContext();
@@ -9,6 +10,7 @@ export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [authReady, setAuthReady] = useState(false);
   const messageTimerRef = useRef(null);
+  const navigate = useNavigate();
 
   // Restore auth state once on mount
   useEffect(() => {
@@ -24,13 +26,13 @@ export const AppProvider = ({ children }) => {
 
   // Fetch blogs after auth restoration has completed
   useEffect(() => {
-    if (!authReady) {
-      return;
-    }
+    // if (!authReady) {
+    //   return;
+    // }
 
-    if (!user) {
-      return;
-    }
+    // if (!user) {
+    //   return;
+    // }
 
     let isActive = true;
 
@@ -63,8 +65,9 @@ export const AppProvider = ({ children }) => {
   const logout = () => {
     window.localStorage.removeItem('loggedUser');
     setUser(null);
-    setBlogs([]);
+    // setBlogs([]);
     blogService.setToken(null);
+    navigate('/');
   };
 
   const showMessage = (text, type = 'success', duration = 5000) => {
@@ -138,19 +141,18 @@ export const AppProvider = ({ children }) => {
 
     if (!result) {
       (console.log('operation cancelled'),
-      blogService.getAll().then((fetchedBlogs) => console.log(fetchedBlogs)));
+        blogService.getAll().then((fetchedBlogs) => console.log(fetchedBlogs)));
     }
 
     if (result) {
       const target = blogs.find((n) => n.id === id);
-      const notRightUser = blogs.find((n) => n.user?.username === username);
 
       if (!target) {
         showMessage('The blog could not be found', 'error');
         return;
       }
 
-      if (!notRightUser) {
+      if (target.user?.username !== username) {
         showMessage(
           'Only blogs that belong to the logged-in user can be deleted',
           'error',

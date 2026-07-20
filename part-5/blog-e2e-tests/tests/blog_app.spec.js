@@ -143,7 +143,7 @@ describe('Blog app', () => {
       await loginWith(page, testUser1.username, testUser1.password);
       await createBlog(page, 'Test Book 1', 'Martin Fowler', 'test url');
       await createBlog(page, 'Test Book 2', 'George Orwell', 'test url');
-      await createBlog(page, 'Test Book 3', 'Stephen King', 'test url');
+     await createBlog(page, 'Test Book 3', 'Stephen King', 'test url');
     });
 
     test('blogs are listed according to their number of likes', async ({

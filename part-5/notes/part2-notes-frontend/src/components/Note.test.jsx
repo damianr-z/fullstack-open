@@ -5,11 +5,11 @@ import Toggleable from './Toggleable';
 import NoteForm from './NoteForm';
 
 test('renders this one', () => {
-  const note = {
+  const notes = {
     content: 'Component testing is done with react-testing-library',
     important: true,
   };
-  render(<Note note={note} />);
+  render(<Note notes={notes} />);
   const element = screen.getByText(
     'Component testing is done with react-testing-library',
   );
@@ -19,12 +19,12 @@ test('renders this one', () => {
 });
 
 test('renders content', () => {
-  const note = {
+  const notes = {
     content: 'Does not work anymore :(',
     important: true,
   };
 
-  render(<Note note={note} />);
+  render(<Note note={notes} />);
 
   const element = screen.getByText('Does not work anymore :(', {
     exact: false,

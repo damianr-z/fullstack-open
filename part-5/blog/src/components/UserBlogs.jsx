@@ -1,25 +1,16 @@
 import { useAppContext } from '../context/useAppContext';
+import NavBar from './NavBar';
 import NewBlog from './NewBlog';
 import Blog from './Blog';
 import Message from './Message';
 
 export default function UserBlogs() {
-  const { user, blogs, logout, handleLikeOf, handleDeleteOf } = useAppContext();
-
-  const handleLogout = async (event) => {
-    event.preventDefault();
-    logout();
-  };
+  const { user, blogs, handleLikeOf, handleDeleteOf } = useAppContext();
 
   return (
     <>
       <Message />
-      <div className={'userInfo'}>
-        <p>
-          {user.name} <em>logged-in</em>
-        </p>
-        <button onClick={handleLogout}>log out</button>
-      </div>
+
       <h2>Blogs List</h2>
       <div className="blogContainer">
         <div className="blogListPanel">
@@ -31,17 +22,17 @@ export default function UserBlogs() {
               .map((blog) => (
                 <Blog
                   key={blog.id}
+                  user={user}
                   blog={blog}
-                  username={user.username}
                   handleLike={() => handleLikeOf(blog.id)}
                   handleDelete={() =>
-                    handleDeleteOf({ id: blog.id, username: user.username })
+                    handleDeleteOf({ id: blog.id, username: user?.username })
                   }
                 />
               ))}
           </ul>
         </div>
-        <NewBlog />
+        {user && <NewBlog />}
       </div>
     </>
   );
