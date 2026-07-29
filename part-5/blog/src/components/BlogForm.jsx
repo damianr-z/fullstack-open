@@ -2,7 +2,7 @@ import blogService from '../services/blogs';
 import { useAppContext } from '../context/useAppContext';
 
 export default function BlogForm({ blogFormRef, handleCreateBlog }) {
-  const { setBlogs, user, showMessage } = useAppContext();
+  const { setBlogs, user, showMessage, navigate } = useAppContext();
   const addBlog = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -62,6 +62,7 @@ export default function BlogForm({ blogFormRef, handleCreateBlog }) {
         showMessage('Failed to create blog. Please try again.', 'error');
       }
     }
+    navigate('/blogs');
   };
 
   return (

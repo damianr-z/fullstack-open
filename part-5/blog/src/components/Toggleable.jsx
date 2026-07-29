@@ -1,6 +1,6 @@
 import { useState, useImperativeHandle } from 'react';
 
-const Toogleable = ({ children, buttonLabel = 'enter new book', ref }) => {
+const Toogleable = ({ children, buttonLabel = 'enter new blog', ref }) => {
   const [visible, setVisible] = useState(false);
 
   const toggleVisibility = (e) => {

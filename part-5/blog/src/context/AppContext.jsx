@@ -10,6 +10,7 @@ export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [authReady, setAuthReady] = useState(false);
   const messageTimerRef = useRef(null);
+
   const navigate = useNavigate();
 
   // Restore auth state once on mount
@@ -67,7 +68,7 @@ export const AppProvider = ({ children }) => {
     setUser(null);
     // setBlogs([]);
     blogService.setToken(null);
-    navigate('/');
+    navigate('/blogs');
   };
 
   const showMessage = (text, type = 'success', duration = 5000) => {
@@ -133,7 +134,7 @@ export const AppProvider = ({ children }) => {
   };
 
   //// Delete logic
-  //✅ 5.11 completed
+  //DONE:✅ 5.11
   const handleDeleteOf = ({ id, username }) => {
     if (!id) return;
 
@@ -163,7 +164,7 @@ export const AppProvider = ({ children }) => {
       blogService
         .remove(id)
         .then(() => {
-          showMessage(`Deleting blog ${target.title} by ${target.author}`);
+          showMessage(`Deleted blog ${target.title} by ${target.author}`);
           // Filter is used for removal while Map is used for transformation, hence the logic varies when compared to the update logic handler.
           setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id));
         })
@@ -181,6 +182,7 @@ export const AppProvider = ({ children }) => {
 
       blogService.getAll().then((fetchedBlogs) => console.log(fetchedBlogs));
     }
+    navigate('/blogs');
   };
 
   const value = {
@@ -193,6 +195,7 @@ export const AppProvider = ({ children }) => {
     logout,
     handleLikeOf,
     handleDeleteOf,
+    navigate,
   };
 
   return (
