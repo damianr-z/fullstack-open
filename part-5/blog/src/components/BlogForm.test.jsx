@@ -3,11 +3,26 @@ import userEvent from '@testing-library/user-event';
 import BlogForm from './BlogForm';
 import Toogleable from './Toggleable';
 
+vi.mock('../services/blogs', () => ({
+  default: {
+    create: vi.fn().mockResolvedValue({
+      title: 'testing the title input...',
+      author: 'testing the author input...',
+      url: 'testing the url input...',
+    }),
+    getAll: vi.fn().mockResolvedValue([]),
+  },
+}));
+
 vi.mock('../context/useAppContext', () => ({
   useAppContext: () => ({
+    blogs: [],
     setBlogs: vi.fn(),
-    user: { username: 'testuser' },
+    user: { username: 'testuser' } || null,
     showMessage: vi.fn(),
+    navigate: vi.fn(),
+    handleLikeOf: vi.fn(),
+    handleDeleteOf: vi.fn(),
   }),
 }));
 
@@ -18,12 +33,13 @@ describe('<Toggeable />', () => {
   beforeEach(async () => {
     createBlog = vi.fn();
     user = userEvent.setup();
+    const blogFormRef = { current: { toggleVisibility: vi.fn() } };
     render(
       <Toogleable>
-        <BlogForm handleCreateBlog={createBlog} />
+        <BlogForm blogFormRef={blogFormRef} handleCreateBlog={createBlog} />
       </Toogleable>,
     );
-    await user.click(screen.getByText('Enter new Book'));
+    await user.click(screen.getByText('enter new blog'));
   });
 
   test('The form calls the event handler it received as props with the right details when a new blog is created', async () => {
