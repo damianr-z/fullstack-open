@@ -141,8 +141,8 @@ export const AppProvider = ({ children }) => {
     const result = window.confirm('Are you sure want to delete this blog?');
 
     if (!result) {
-      (console.log('operation cancelled'),
-        blogService.getAll().then((fetchedBlogs) => console.log(fetchedBlogs)));
+      console.log('operation cancelled');
+      return;
     }
 
     if (result) {
@@ -179,8 +179,6 @@ export const AppProvider = ({ children }) => {
             showMessage('Failed to delete blog, try again');
           }
         });
-
-      blogService.getAll().then((fetchedBlogs) => console.log(fetchedBlogs));
     }
     navigate('/blogs');
   };
