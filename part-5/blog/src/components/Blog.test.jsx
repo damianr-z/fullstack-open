@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { vi } from 'vitest';
+import { beforeEach, vi } from 'vitest';
 import Blog from './Blog';
 
 const { mockUseAppContext } = vi.hoisted(() => ({
@@ -121,43 +121,86 @@ test('If the like button is clicked twice, the event handler the component recei
 });
 
 // DONE: 5.27
-test('Blog information and the number of likes are displayed to unauthenticated users, buttons are not displayed', async () => {
-  const mockBlog = {
-    id: 'blog-123',
-    title: 'Some Title',
-    author: 'Some Author',
-    url: 'example.com',
-    likes: 5,
-    user: { username: 'ownerUser' },
-  };
+describe('Testing blogs routed on single blog page', () => {
+  let mockBlog;
+  let user;
 
-  mockUseAppContext.mockReturnValue({
+  const baseContext = () => ({
     blogs: [mockBlog],
     user: null,
     handleLikeOf: vi.fn(),
     handleDeleteOf: vi.fn(),
   });
 
-  render(
-    <MemoryRouter initialEntries={[`/blogs/${mockBlog.id}`]}>
-      <Routes>
-        <Route path="/blogs/:id" element={<Blog />} />
-      </Routes>
-    </MemoryRouter>,
-  );
+  const renderBlogPage = (userTobeChanged = {}) => {
+    mockUseAppContext.mockReturnValue({
+      ...baseContext(),
+      ...userTobeChanged,
+    });
 
-  const user = userEvent.setup();
-  await user.click(screen.getByRole('button', { name: 'more' }));
+    return render(
+      <MemoryRouter initialEntries={[`/blogs/${mockBlog.id}`]}>
+        <Routes>
+          <Route path="/blogs/:id" element={<Blog />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+  };
 
-  expect(screen.getByText('Website: example.com')).toBeInTheDocument();
-  expect(screen.getByText('Likes: 5')).toBeInTheDocument();
-  expect(
-    screen.queryByRole('button', { name: /Likes|Like/i }),
-  ).not.toBeInTheDocument();
-  expect(
-    screen.queryByRole('button', { name: 'Delete' }),
-  ).not.toBeInTheDocument();
+  beforeEach(async () => {
+    mockBlog = {
+      id: 'blog-123',
+      title: 'Some Title',
+      author: 'Some Author',
+      url: 'example.com',
+      likes: 5,
+      user: { username: 'ownerUser' },
+    };
+    user = userEvent.setup();
+  });
+
+  // DONE: 5.27-a
+  test('Blog information and the number of likes are displayed to unauthenticated users, buttons are not displayed', async () => {
+    renderBlogPage(); // the user stays 'null' as in the base content
+    await user.click(screen.getByRole('button', { name: 'more' }));
+    expect(screen.getByText('Website: example.com')).toBeInTheDocument();
+    expect(screen.getByText('Likes: 5')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /^(Likes|Like):\s\d+$/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Delete' }),
+    ).not.toBeInTheDocument();
+  });
+
+  // DONE: 5.27-b
+  test('Authenticated users who are not the blog\’s creator are shown only the like button', async () => {
+    renderBlogPage({ user: { username: 'anotherUser' } });
+    await user.click(screen.getByRole('button', { name: 'more' }));
+    expect(screen.getByText('Some Title by Some Author')).toBeInTheDocument();
+    expect(screen.getByText('Likes: 5')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /^(Likes|Like):\s\d+$/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Delete' }),
+    ).not.toBeInTheDocument();
+
+    //screen.debug();
+  });
+
+  // DONE: 5.27-c
+  test('The blog\’s creator is also shown the delete button', async () => {
+    renderBlogPage({ user: { username: 'ownerUser' } });
+    await user.click(screen.getByRole('button', { name: 'more' }));
+    expect(screen.getByText('Some Title by Some Author')).toBeInTheDocument();
+    expect(screen.getByText('Likes: 5')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /^(Likes|Like):\s\d+$/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Delete' }),
+    ).toBeInTheDocument();
+    screen.debug();
+  });
 });
-
-test('Authenticated users who are not the blog\’s creator are shown only the like button', async () => {});
-test('The blog\’s creator is also shown the delete button', async () => {});

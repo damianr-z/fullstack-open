@@ -22,8 +22,8 @@ function Blog() {
     setCollapsed((prev) => !prev);
   };
 
-  const isUserLogged =
-    Boolean(user?.username) && user.username === blog.user?.username;
+  const isUserLogged = Boolean(user?.username);
+  const userOwnsBlog = user?.username === blog.user?.username;
 
   return (
     <div className="blog">
@@ -50,9 +50,12 @@ function Blog() {
                 </p>
               )}
             </li>
-            <li>
-              {isUserLogged && <button onClick={handleDelete}>Delete</button>}
-            </li>
+
+            {isUserLogged && userOwnsBlog && (
+              <li>
+                <button onClick={handleDelete}>Delete</button>
+              </li>
+            )}
           </ul>
         )}
       </span>

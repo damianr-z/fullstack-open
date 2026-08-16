@@ -70,6 +70,13 @@ In `src/components/Blog.test.jsx`:
   - Mocked `handleLikeOf` from context and asserted it is called twice.
   - Rendered component inside `MemoryRouter` + `Routes` + `Route` with `/blogs/:id`.
 - Updated the first two tests to also render via router and provide proper context mocks.
+- Added a `renderBlogPage` helper inside the `describe` block to avoid repeating the same routing and mock-context setup.
+- The helper builds a shared `baseContext()` and then merges test-specific overrides on top of it.
+- This makes it easy to change only the `user` value per test, for example:
+  - `user: null` for unauthenticated viewing
+  - `user: { username: 'anotherUser' }` for a logged-in non-owner
+  - `user: { username: 'ownerUser' }` for the blog creator
+- The override object is just a plain JavaScript argument, not a React prop. It is used before rendering so the component receives the correct mocked context from the start.
 
 ### Result
 
@@ -95,3 +102,4 @@ These changes keep test updates minimal and focused on contract alignment:
 - No production behavior was altered.
 - Tests were adapted to the component’s current context + routing architecture.
 - Assertions now target the actual handlers invoked by the UI interactions.
+- Shared setup was extracted into `renderBlogPage` so the route-based tests stay readable while still allowing per-test context differences.
