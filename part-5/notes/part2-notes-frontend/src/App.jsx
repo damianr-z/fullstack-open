@@ -27,8 +27,6 @@ const Navigation = styled.div`
   align-items: center;
 `;
 
-
-
 const App = () => {
   const [notes, setNotes] = useState([]);
 
@@ -80,17 +78,19 @@ const App = () => {
   const match = useMatch('/notes/:id');
   const note = match ? notes.find((note) => note.id === match.params.id) : null;
 
+  const style = { '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.3)' } };
+
   return (
     <Page>
       <AppBar position="static">
         <Toolbar>
-          <Button color="inherit" component={Link} to="/">
+          <Button color="inherit" component={Link} to="/" sx={style}>
             Home
           </Button>
-          <Button color="inherit" component={Link} to="/notes">
+          <Button color="inherit" component={Link} to="/notes" sx={style}>
             Notes
           </Button>
-          <Button color="inherit" component={Link} to="/create">
+          <Button color="inherit" component={Link} to="/create" sx={style}>
             new note
           </Button>
         </Toolbar>
