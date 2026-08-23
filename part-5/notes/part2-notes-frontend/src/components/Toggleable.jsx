@@ -21,7 +21,6 @@ const Togglable = ({ children, buttonLabel, ref }) => {
       </div>
       <div style={showWhenVisible}>
         {children}
-        <button onClick={toggleVisibility}>cancel</button>
       </div>
     </div>
   );

@@ -1,12 +1,20 @@
 import { useState, useEffect } from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from '@mui/material';
 import Note from './Note';
 import LoginForm from './LoginForm';
-import NoteForm from './NoteForm';
 import Togglable from './Toggleable';
 import noteService from '../services/notes';
 import loginService from '../services/login';
 
-const NoteList = ({ notes, setNotes, noteFormRef, addNote }) => {
+const NoteList = ({ notes, setNotes, toggleImportanceOf, deleteNote }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showAll, setShowAll] = useState(true);
@@ -35,8 +43,6 @@ const NoteList = ({ notes, setNotes, noteFormRef, addNote }) => {
       />
     </Togglable>
   );
-
-
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -83,7 +89,7 @@ const NoteList = ({ notes, setNotes, noteFormRef, addNote }) => {
           setErrorMessage('Your session expired. Please log in again.');
           setTimeout(() => {
             setErrorMessage(null);
-          }, 5000);
+          }, 8000);
         }
       });
   }, [user]);
@@ -100,24 +106,29 @@ const NoteList = ({ notes, setNotes, noteFormRef, addNote }) => {
             {user.name} logged in <button onClick={handleLogout}>logout</button>
           </p>
 
-          <Togglable buttonLabel={'new note'} ref={noteFormRef}>
-            <NoteForm createNote={addNote} />
-          </Togglable>
-
-          <div>
-            <button onClick={() => setShowAll(!showAll)}>
-              show {showAll ? 'important' : 'all'}
-            </button>
-          </div>
-          <ul>
-            {notesToShow.map((note) => (
-              <Note
-                key={note.id}
-                notes={notes}
-                toggleImportance={() => toggleImportanceOf(note.id)}
-              />
-            ))}
-          </ul>
+          <TableContainer style={{ marginBlock: 20 }} component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>content</TableCell>
+                  <TableCell>user</TableCell>
+                  <TableCell>importat</TableCell>
+                </TableRow>
+              </TableHead>
+              {notesToShow.map((note) => (
+                <TableBody>
+                  <Note
+                    key={note.id}
+                    note={note}
+                    toggleImportanceOf={() => toggleImportanceOf(note.id)}
+                    deleteNote={deleteNote}
+                  />
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{note.important ? 'yes' : ''}</TableCell>
+                </TableBody>
+              ))}
+            </Table>
+          </TableContainer>
         </div>
       )}
     </main>

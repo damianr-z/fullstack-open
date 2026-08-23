@@ -1,11 +1,7 @@
-import {
-  useParams,
-  useNavigate,
-} from 'react-router-dom';
+import { TableCell } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const Note = ({ note, toggleImportanceOf, deleteNote }) => {
-  const id = useParams().id;
-  const navigate = useNavigate();
 
   if (!note) {
     return null;
@@ -15,19 +11,18 @@ const Note = ({ note, toggleImportanceOf, deleteNote }) => {
 
   const handleDelete = () => {
     if (window.confirm(`Delete note "${note.content}"`)) {
-      deleteNote(id);
-      navigate('/notes');
+      deleteNote(note.id);
     }
   };
 
   return (
-    <li className="note">
-      <span>{note.content}</span>
-      {toggleImportanceOf && (
-        <button onClick={toggleImportanceOf}>{label}</button>
-      )}
-      <button onClick={handleDelete}>delete</button>
-    </li>
+    <TableCell>
+      <Link to={`/notes/${note.id}`}>{note.content}</Link>
+    </TableCell>
+      // {toggleImportanceOf && (
+      //   <button onClick={toggleImportanceOf}>{label}</button>
+      // )}
+      // <button onClick={handleDelete}>delete</button>
   );
 };
 
