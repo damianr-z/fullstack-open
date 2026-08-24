@@ -168,6 +168,27 @@ describe('Updating a new blog', () => {
     const modifiedBlog = blogsAtEnd.find((blog) => blog.id === blogToModify.id);
     assert.strictEqual(blogToModify.likes, modifiedBlog.likes);
   });
+
+  test('updated blog response contains populated user fields', async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToModify = blogsAtStart[0];
+
+    const payload = {
+      ...blogToModify,
+      likes: blogToModify.likes + 1,
+    };
+
+    const response = await api
+      .put(`/api/blogs/${blogToModify.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(payload)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    assert.strictEqual(typeof response.body.user, 'object');
+    assert.strictEqual(response.body.user.username, 'testUser');
+    assert.strictEqual(response.body.user.name, 'John Testing');
+  });
 });
 
 describe('Deletion of a blog', () => {

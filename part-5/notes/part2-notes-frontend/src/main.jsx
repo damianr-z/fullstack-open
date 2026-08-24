@@ -1,5 +1,7 @@
-import ReactDOM from 'react-dom/client'
-import App from './App'
+import './styles.css';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
 
 const notes = [
   {
@@ -17,8 +19,10 @@ const notes = [
     content: 'GET and POST are the most important methods of HTTP protocol',
     important: true,
   },
-]
+];
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <App notes={notes} />
-)
+  <BrowserRouter>
+    <App notes={notes} />
+  </BrowserRouter>,
+);

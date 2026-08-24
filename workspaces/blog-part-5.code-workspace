@@ -1,0 +1,43 @@
+{
+  "folders": [
+    {
+      "path": "../part-5/blog",
+    },
+    {
+      "path": "../part-4/bloglist-bend",
+    },
+    {
+      "path": "../part-5/blog-e2e-tests",
+    },
+  ],
+  "settings": {
+    "workbench.colorCustomizations": {
+      "activityBar.activeBackground": "#74aedb",
+      "activityBar.background": "#74aedb",
+      "activityBar.foreground": "#15202b",
+      "activityBar.inactiveForeground": "#15202b99",
+      "activityBarBadge.background": "#cb3489",
+      "activityBarBadge.foreground": "#e7e7e7",
+      "commandCenter.border": "#15202b99",
+      "sash.hoverBorder": "#74aedb",
+      "statusBar.background": "#4b97d1",
+      "statusBar.foreground": "#15202b",
+      "statusBarItem.hoverBackground": "#2f7eba",
+      "statusBarItem.remoteBackground": "#f2cce2",
+      "statusBarItem.remoteForeground": "#15202b",
+      "titleBar.activeBackground": "#4b97d1",
+      "titleBar.activeForeground": "#15202b",
+      "titleBar.inactiveBackground": "#4b97d199",
+      "titleBar.inactiveForeground": "#15202b99",
+      "activityBarTop.activeBackground": "#74aedb",
+      "activityBarTop.background": "#74aedb",
+      "activityBarTop.foreground": "#15202b",
+      "activityBarTop.inactiveForeground": "#15202b99",
+      "commandCenter.foreground": "#15202b",
+      "statusBar.debuggingBackground": "#4b97d1",
+      "statusBar.debuggingForeground": "#15202b"
+    },
+    "peacock.color": "#4b97d1",
+    "js/ts.preferences.autoImportEntrypointDirectorySearch": true,
+  },
+}
