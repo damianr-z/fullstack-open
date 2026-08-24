@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useAppContext } from '../context/useAppContext';
+import { useNavigate } from 'react-router-dom';
+import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import loginService from '../services/login';
 import blogService from '../services/blogs';
 import Message from './Message';
-import { useNavigate } from 'react-router-dom';
 
 export default function LoginForm() {
   const { setUser, showMessage } = useAppContext();
@@ -34,27 +35,73 @@ export default function LoginForm() {
 
   return (
     <>
+      // DONE: 5.29
       <Message />
-      <h2>Log in to application</h2>
-      <form onSubmit={handleLogin}>
-        <label htmlFor="username">username:</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <label htmlFor="password">password:</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">login</button>
-      </form>
+      <Box
+        component="form"
+        onSubmit={handleLogin}
+        sx={{
+          maxWidth: 420,
+          mx: 'auto',
+          mt: 4,
+        }}
+      >
+        <Typography
+          variant="h5"
+          component="h2"
+          sx={{ mb: 2, textAlign: 'center' }}
+        >
+          Log in to application
+        </Typography>
+
+        <Stack spacing={2}>
+          <TextField
+            label="Username"
+            placeholder="username"
+            type="text"
+            id="username"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            fullWidth
+            variant="outlined"
+            sx={{
+              '& .MuiInputBase-input::placeholder': {
+                color: 'transparent',
+                transition: 'color 0.2s ease',
+              },
+              '&:hover .MuiInputBase-input::placeholder': {
+                color: 'text.secondary',
+              },
+            }}
+          />
+
+          <TextField
+            label="Password"
+            placeholder="password"
+            type="password"
+            id="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            variant="outlined"
+            sx={{
+              '& .MuiInputBase-input::placeholder': {
+                color: 'transparent',
+                transition: 'color 0.2s ease',
+              },
+              '&:hover .MuiInputBase-input::placeholder': {
+                color: 'text.secondary',
+              },
+            }}
+          />
+
+          <Button type="submit" variant="contained" size="large">
+            Login
+          </Button>
+        </Stack>
+      </Box>
     </>
   );
 }
