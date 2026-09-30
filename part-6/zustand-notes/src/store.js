@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
+import { devtools } from 'zustand/middleware';
 import noteService from './services/notes';
 
-const useNoteStore = create((set, get) => ({
+const useNoteStore = create(devtools((set, get) => ({
   notes: [],
   filter: 'all',
   actions: {
@@ -26,7 +27,7 @@ const useNoteStore = create((set, get) => ({
     },
     setFilter: (value) => set(() => ({ filter: value })),
   },
-}));
+})));
 
 export const useNotes = () =>
   useNoteStore(
@@ -39,4 +40,5 @@ export const useNotes = () =>
   );
 
 export const useFilter = () => useNoteStore((state) => state.filter);
+
 export const useNoteActions = () => useNoteStore((state) => state.actions);
