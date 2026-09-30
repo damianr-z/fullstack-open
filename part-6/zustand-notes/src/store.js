@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
 import noteService from './services/notes';
 
-const useNoteStore = create((set) => ({
+const useNoteStore = create((set, get) => ({
   notes: [],
   filter: 'all',
   actions: {
