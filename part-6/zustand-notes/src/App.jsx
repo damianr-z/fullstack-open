@@ -1,15 +1,15 @@
-import { useNoteActions } from './store';
-import { useEffect } from 'react';
-import NoteForm from './NoteForm';
-import NoteList from './NoteList';
-import VisibilityFilter from './VisibilityFilter';
+import { useEffect } from 'react'
+import NoteForm from './NoteForm'
+import NoteList from './NoteList'
+import VisibilityFilter from './VisibilityFilter'
+import { useNoteActions } from './store'
 
 const App = () => {
-  const { initialize } = useNoteActions();
+  const { initialize } = useNoteActions()
 
   useEffect(() => {
-    initialize();
-  }, [initialize]);
+    initialize()
+  }, [initialize])
 
   return (
     <div>
@@ -17,7 +17,7 @@ const App = () => {
       <VisibilityFilter />
       <NoteList />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

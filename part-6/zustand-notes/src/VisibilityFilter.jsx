@@ -1,7 +1,7 @@
-import { useNoteActions } from './store';
+import { useNoteActions } from './store'
 
 const VisibilityFilter = () => {
-  const { setFilter } = useNoteActions();
+  const { setFilter } = useNoteActions()
 
   return (
     <div>
@@ -25,7 +25,7 @@ const VisibilityFilter = () => {
       />
       not important
     </div>
-  );
-};
+  )
+}
 
-export default VisibilityFilter;
+export default VisibilityFilter
