@@ -1,29 +1,18 @@
-import { useQuery } from '@tanstack/react-query';
-import { getNotes } from './requests.js';
+import { useNotes } from './hooks/useNotes.js';
+
 const App = () => {
+  const { notes, isPending, addNote: addNoteToServer, toggleImportance } = useNotes();
+  
   const addNote = async (event) => {
     event.preventDefault();
     const content = event.target.note.value;
-    event.target.note.value = '';
-    console.log(content);
+    event.target.reset();
+    addNoteToServer(content);
   };
 
-  const toggleImportance = (note) => {
-    console.log('toggle importance of', note.id);
-  };
-
-  const result = useQuery({
-    queryKey: ['notes'],
-    queryFn: getNotes
-  });
-
-  console.log(JSON.parse(JSON.stringify(result)));
-
-  if (result.isPending) {
+  if (isPending) {
     return <div>Loading data...</div>;
   }
-
-  const notes = result.data ?? [];
 
   return (
     <div>
@@ -35,7 +24,7 @@ const App = () => {
       {notes.map((note) => (
         <li key={note.id}>
           {note.important ? <strong>{note.content}</strong> : note.content}
-          <button onClick={() => toggleImportance(note.id)}>
+          <button onClick={() => toggleImportance(note)}>
             {note.important ? 'make not important' : 'make important'}
           </button>
         </li>

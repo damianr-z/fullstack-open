@@ -9,6 +9,12 @@
       "id": "2",
       "content": "context api provides an alternative way for sharing data between components",
       "important": false
+    },
+    {
+      "content": "new stuff gets rendered thanks to invalidation",
+      "important": true,
+      "id": "8Ftg3t3iTh4"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
