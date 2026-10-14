@@ -37,7 +37,10 @@
       "activityBarTop.inactiveForeground": "#e7e7e799",
       "commandCenter.foreground": "#e7e7e7",
       "statusBar.debuggingBackground": "#a62d80",
-      "statusBar.debuggingForeground": "#e7e7e7"
+      "statusBar.debuggingForeground": "#e7e7e7",
+      "activityBar.activeBorder": "#e7e7e7",
+      "activityBarTop.activeBorder": "#e7e7e7",
+      "statusBar.inactiveBackground": "#a62d80"
     },
     "peacock.color": "#A62D80",
     "liveServer.settings.multiRootWorkspaceName": "part2-notes-frontend",
