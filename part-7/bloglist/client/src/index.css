@@ -1,0 +1,84 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+main {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+ul li {
+  list-style: none;
+}
+
+
+
+.error {
+  color: rgb(215, 34, 2);
+  background-color: rgba(255, 216, 216, 0.976);
+  padding: 0.8rem 1.2rem;
+  margin-bottom: 2rem;
+  border: 3px solid rgb(215, 34, 2);
+  border-radius: 10px;
+}
+
+.success {
+  color: rgb(0, 137, 14);
+  background-color: rgba(214, 255, 215, 0.976);
+  padding: 0.8rem 1.2rem;
+  margin-bottom: 2rem;
+  border: 3px solid rgb(0, 137, 14);
+  border-radius: 10px;
+}
+
+.blog {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border: 1px solid;
+  margin: 0 0 0.5rem;
+  width: 80%;
+}
+
+.blogContainer {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) 20rem;
+  gap: 1rem;
+  align-items: start;
+}
+
+.blogListPanel {
+  min-width: 0;
+}
+
+.blogList {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.blog span {
+  padding: 5px 15px;
+  min-width: 0;
+}
+
+.newBlog {
+  width: 20rem;
+}
+
+.newBlog form {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .blogContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .newBlog {
+    width: 100%;
+  }
+}

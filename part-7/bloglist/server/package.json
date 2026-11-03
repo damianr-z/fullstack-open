@@ -1,0 +1,39 @@
+{
+  "name": "bloglist-bend",
+  "version": "1.0.0",
+  "description": "bloglist",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "test": "NODE_ENV=test node --test -- tests/blog_api.test.js",
+    "start:test": "NODE_ENV=test node --watch index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/damianroiz/fullstack-open.git"
+  },
+  "author": "Damian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/damianroiz/fullstack-open/issues"
+  },
+  "homepage": "https://github.com/damianroiz/fullstack-open#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.3.0",
+    "mongoose": "^7.6.5"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}

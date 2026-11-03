@@ -1,0 +1,79 @@
+import blogService from '../services/blogs';
+import { useAppContext } from '../context/useAppContext';
+
+export default function BlogForm({ blogFormRef, handleCreateBlog }) {
+  const { setBlogs, user, showMessage, navigate } = useAppContext();
+  const addBlog = async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const blogData = {
+      title: formData.get('title')?.toString().trim() ?? '',
+      author: formData.get('author')?.toString().trim() ?? '',
+      url: formData.get('url')?.toString().trim() ?? '',
+    };
+    const { title, author, url } = blogData;
+
+    if (!title) {
+      showMessage('Please add a title', 'error', 3000);
+      return;
+    }
+    if (!author) {
+      showMessage('Please add an author', 'error', 3000);
+      return;
+    }
+    if (!url) {
+      showMessage('Please add an URL', 'error', 3000);
+      return;
+    }
+
+    // Call the handler prop for testing
+    if (typeof handleCreateBlog === 'function') {
+      handleCreateBlog(blogData);
+    }
+
+    try {
+      const returnedBlog = await blogService.create({
+        url,
+        title,
+        author,
+        user,
+        likes: 0,
+      });
+
+      const updatedBlogList = await blogService.getAll();
+      setBlogs(updatedBlogList);
+      showMessage(
+        `a new blog <i>${returnedBlog.title}</i> by <i>${returnedBlog.author}</i> added`,
+        'success',
+      );
+      form.reset();
+      blogFormRef.current?.toggleVisibility();
+    } catch (error) {
+      if (error.response?.status === 400) {
+        const errorMsg =
+          error.response?.data?.error ||
+          'Invalid blog data. Please check all fields.';
+        showMessage(errorMsg, 'error');
+      } else if (error.response?.status === 401) {
+        showMessage('Unauthorized. Please log in again.', 'error');
+      } else {
+        showMessage('Failed to create blog. Please try again.', 'error');
+      }
+    }
+    navigate('/blogs');
+  };
+
+  return (
+    <form onSubmit={addBlog} noValidate>
+      <label htmlFor="title">title:</label>
+      <input type="text" id="title" name="title" required />
+      <label htmlFor="author">author:</label>
+      <input type="text" id="author" name="author" required />
+      <label htmlFor="url">url:</label>
+      <input type="text" id="url" name="url" required />
+      <button type="submit">create</button>
+    </form>
+  );
+}
