@@ -1,7 +1,6 @@
 import { createContext, useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import blogService from '../services/blogs';
-
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
@@ -9,6 +8,7 @@ export const AppProvider = ({ children }) => {
   const [message, setMessage] = useState(null); // { text: string, type: 'success' | 'error' }
   const [user, setUser] = useState(null);
   const [authReady, setAuthReady] = useState(false);
+  const [fetchError, setFetchError] = useState(null);
   const messageTimerRef = useRef(null);
 
   const navigate = useNavigate();
@@ -36,6 +36,7 @@ export const AppProvider = ({ children }) => {
     // }
 
     let isActive = true;
+    setFetchError(null);
 
     blogService
       .getAll()
@@ -47,6 +48,7 @@ export const AppProvider = ({ children }) => {
       .catch((e) => {
         if (isActive) {
           console.error('Failed to fetch blogs:', e);
+          setFetchError(e);
         }
       });
 
@@ -70,6 +72,7 @@ export const AppProvider = ({ children }) => {
     blogService.setToken(null);
     navigate('/blogs');
   };
+
 
   const showMessage = (text, type = 'success', duration = 5000) => {
     if (messageTimerRef.current) {
@@ -189,6 +192,7 @@ export const AppProvider = ({ children }) => {
     user,
     setUser,
     message,
+    fetchError,
     showMessage,
     logout,
     handleLikeOf,

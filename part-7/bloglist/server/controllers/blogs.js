@@ -18,9 +18,15 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs);
 });
 
-blogsRouter.get('/:id', async (request, response) => {
-  const blog = await Blog.findById(request.params.id);
-  blog ? response.json(blog) : response.status(404).end;
+blogsRouter.get('/:id', async (request, response, next) => {
+  try {
+    const blog = await Blog.findById(request.params.id);
+    blog
+      ? response.json(blog)
+      : response.status(404).json({ error: 'blog not found' });
+  } catch (error) {
+    next(error);
+  }
 });
 
 blogsRouter.put('/:id', async (request, response) => {

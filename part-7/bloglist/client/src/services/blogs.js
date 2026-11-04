@@ -15,6 +15,9 @@ const getAll = () => {
   );
 };
 
+const getOne = (id) =>
+  axios.get(`${baseUrl}/${id}`).then((response) => response.data);
+
 const create = async (newObject) => {
   const config = {
     headers: { Authorization: token },
@@ -35,4 +38,4 @@ const remove = (id) => {
   return request.then((response) => response.data);
 };
 
-export default { getAll, create, update, remove, setToken };
+export default { getAll, getOne, create, update, remove, setToken };

@@ -1,19 +1,49 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import blogService from '../services/blogs';
 import { useAppContext } from '../context/useAppContext';
 import { Box, Button, List, ListItem, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LikeIcon from '@mui/icons-material/ThumbUp';
+import ErrorMessage from './ErrorMessage';
 
 function Blog() {
+  // for testing ErrorBoundary
+  // throw new Error('test');
   const [collapsed, setCollapsed] = useState(true);
   const { blogs, user, handleLikeOf, handleDeleteOf } = useAppContext();
 
   const { id } = useParams();
-  const blog = blogs.find((b) => b.id === id);
+  const [fetchedBlog, setFetchedBlog] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let isActive = true;
+    setFetchedBlog(null);
+    setError(null);
+
+    blogService
+      .getOne(id)
+      .then((data) => isActive && setFetchedBlog(data))
+      .catch((e) => isActive && setError(e));
+
+    return () => {
+      isActive = false;
+    };
+  }, [id]);
+
+  // The list in context stays current after likes, so prefer it over the fetched copy
+  const blog = blogs.find((b) => b.id === id) ?? fetchedBlog;
 
   if (!blog) {
-    return <div className="blog">Blog not found.</div>;
+    if (!error) return null;
+    return (
+      <ErrorMessage
+        message="The blog could not be found"
+        status={error.response?.status}
+        retry={false}
+      />
+    );
   }
 
   const handleLike = () => handleLikeOf(blog.id);
@@ -29,6 +59,7 @@ function Blog() {
   const userOwnsBlog = user?.username === blog.user?.username;
 
   // DONE: 5.31
+
   return (
     <Box
       sx={{
